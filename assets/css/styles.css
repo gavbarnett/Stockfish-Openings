@@ -63,10 +63,6 @@ footer {
     stroke-width: 3px;
 }
   
-.node text {
-    font: 12px sans-serif;
-}
-  
 .link {
     fill: none;
     stroke: #000;

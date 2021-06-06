@@ -3,21 +3,10 @@ var stockfish = new Worker("assets/js/node_modules/stockfish/src/stockfish.js")
 var walkdepth = 5
 var API_request_queue = []
 var SF_depth = 3
-var treeData =
-  {
-    "name": "Top Level",
-    "children": [
-      { 
-        "name": "Level 2: A",
-        "children": [
-          { "name": "Son of A" },
-          { "name": "Daughter of A" }
-        ]
-      },
-      { "name": "Level 2: B" }
-    ]
-  };
-
+var treeData = {
+	"name": "start_pos",
+	"children": []
+	}
 
 function main() {
 	var movetree = {}
@@ -100,4 +89,21 @@ function treePruner(oldtree){
 		}
 	}
 	console.log(newtree)
+	treeData = treeGraphics(newtree, "start_pos")
+	console.log(treeData)
+	root = d3.hierarchy(treeData, function(d) { return d.children; });
+}
+
+function treeGraphics(Chesstree, nodename){
+	let temptree = {
+		"name": nodename,
+		"children": []
+		}
+	for (move in Chesstree[nodename]){
+		if (move != "data"){
+			temptree["children"].push(treeGraphics(Chesstree[nodename], move))
+		}
+	}
+	return (temptree)
+
 }

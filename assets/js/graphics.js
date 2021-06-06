@@ -1,7 +1,7 @@
 // Set the dimensions and margins of the diagram
 var margin = {top: 20, right: 90, bottom: 30, left: 90},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 4000 - margin.left - margin.right,
+    height = 2000 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 // appends a 'group' element to 'svg'
@@ -26,7 +26,7 @@ root.x0 = height / 2;
 root.y0 = 0;
 
 // Collapse after the second level
-root.children.forEach(collapse);
+// root.children.forEach(collapse);
 
 update(root);
 
@@ -49,7 +49,7 @@ function update(source) {
       links = treeData.descendants().slice(1);
 
   // Normalize for fixed-depth.
-  nodes.forEach(function(d){ d.y = d.depth * 180});
+  nodes.forEach(function(d){ d.y = d.depth * 50});
 
   // ****************** Nodes section ***************************
 
