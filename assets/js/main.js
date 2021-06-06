@@ -1,11 +1,14 @@
 var body = document.documentElement;
 var stockfish = new Worker("assets/js/node_modules/stockfish/src/stockfish.js")
-var walkdepth = 5
+var walkdepth = 4
 var API_request_queue = []
-var SF_depth = 3
+var SF_depth = 15
 var treeData = {
 	"name": "start_pos",
-	"children": []
+	"children": [],
+	"data": {
+		depth: 0,
+		score_cp: 0}
 	}
 
 function main() {
@@ -39,7 +42,7 @@ function main() {
 			if ((API_request_queue[0][2]).length<walkdepth && new_move_found){
 				new_movelist = API_request_queue[0][2].concat(considered_move)
 				new_movelist_str = new_movelist.join(" ")
-				movetree["start_pos " + new_movelist_str] = {}		
+				movetree["start_pos " + new_movelist_str] = {}
 				API_request_queue.push(["position startpos move" + " " + new_movelist_str, "start_pos " + new_movelist_str, new_movelist])
 			}	
 		} else if (completed){
@@ -52,7 +55,7 @@ function main() {
 				stockfish.postMessage("go depth " + SF_depth)
 			} else {
 				//TREE COMPLETE
-				console.log(movetree)
+				//console.log(movetree)
 				//tidy up
 				treePruner(movetree)
 			}
@@ -63,7 +66,6 @@ function main() {
 function treePruner(oldtree){
 	newtree = {}
 	twigs = []
-	console.log(oldtree)
 	for (branch in oldtree){
 		twigs = branch.split(" ")
 		//THIS IS DIRTY HACK YUK!
@@ -88,7 +90,7 @@ function treePruner(oldtree){
 				break;
 		}
 	}
-	console.log(newtree)
+	//console.log(newtree)
 	treeData = treeGraphics(newtree, "start_pos")
 	console.log(treeData)
 	root = d3.hierarchy(treeData, function(d) { return d.children; });
@@ -97,11 +99,16 @@ function treePruner(oldtree){
 function treeGraphics(Chesstree, nodename){
 	let temptree = {
 		"name": nodename,
-		"children": []
+		"children": [],
+		"data": {
+			depth: 0,
+			score_cp: 0}
 		}
 	for (move in Chesstree[nodename]){
 		if (move != "data"){
 			temptree["children"].push(treeGraphics(Chesstree[nodename], move))
+		} else {
+			temptree["data"] = Chesstree[nodename][move]
 		}
 	}
 	return (temptree)
