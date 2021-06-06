@@ -1,7 +1,11 @@
+//Get window size
+var w = window.innerWidth;
+var h = window.innerHeight;
+
 // Set the dimensions and margins of the diagram
 var margin = {top: 20, right: 90, bottom: 30, left: 90},
-    width = 4000 - margin.left - margin.right,
-    height = 2000 - margin.top - margin.bottom;
+    width = w - margin.left - margin.right,
+    height = h - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 // appends a 'group' element to 'svg'
@@ -11,7 +15,7 @@ var svg = d3.select("body").append("svg")
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate("
-          + margin.left + "," + margin.top + ")");
+          + margin.left + "," + margin.top + ")")
 
 var i = 0,
     duration = 750,
@@ -49,7 +53,6 @@ function update(source) {
       links = treeData.descendants().slice(1);
 
   // Normalize for fixed-depth.
-  nodes.forEach(function(d){ d.y = d.depth * 50});
 
   // ****************** Nodes section ***************************
 
@@ -75,8 +78,11 @@ function update(source) {
 
   // Add labels for the nodes
   nodeEnter.append('text')
-      .attr("dy", ".35em")
+      //.attr("dy", ".35em")
       .attr("x", function(d) {
+		return d.children || d._children ? -13 : 13;
+	  })
+	  .attr("y", function(d) {
           return d.children || d._children ? -13 : 13;
       })
       .attr("text-anchor", function(d) {
