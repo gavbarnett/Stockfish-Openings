@@ -3,6 +3,21 @@ var stockfish = new Worker("assets/js/node_modules/stockfish/src/stockfish.js")
 var walkdepth = 5
 var API_request_queue = []
 var SF_depth = 3
+var treeData =
+  {
+    "name": "Top Level",
+    "children": [
+      { 
+        "name": "Level 2: A",
+        "children": [
+          { "name": "Son of A" },
+          { "name": "Daughter of A" }
+        ]
+      },
+      { "name": "Level 2: B" }
+    ]
+  };
+
 
 function main() {
 	var movetree = {}
@@ -85,6 +100,4 @@ function treePruner(oldtree){
 		}
 	}
 	console.log(newtree)
-
-
 }
